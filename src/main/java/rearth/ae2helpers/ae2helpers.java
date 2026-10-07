@@ -2,12 +2,15 @@ package rearth.ae2helpers;
 
 import appeng.api.ids.AECreativeTabIds;
 import appeng.api.upgrades.Upgrades;
-import appeng.menu.SlotSemantic;
-import appeng.menu.SlotSemantics;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEParts;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -26,8 +29,6 @@ import rearth.ae2helpers.util.ImportCardItem;
 
 @Mod(ae2helpers.MODID)
 public class ae2helpers {
-    
-    public static final SlotSemantic IMPORT_UPGRADE = SlotSemantics.register("IMPORT_UPGRADE", false);
     
     public static final String MODID = "ae2helpers";
     
@@ -64,9 +65,26 @@ public class ae2helpers {
     
     private void commonSetup(FMLCommonSetupEvent event) {
         
-        // ideally we'd define the machine(s) as target here, but that then breaks with other mods that add upgrades to the machine
+        // The card goes directly into the pattern provider's own upgrade slots (added by AE2 addons such as AppliedFlux),
+        // so it has to be registered as a valid upgrade of the pattern provider itself.
+        Upgrades.add(RESULT_IMPORT_CARD.get(), AEBlocks.PATTERN_PROVIDER, 1);
+        Upgrades.add(RESULT_IMPORT_CARD.get(), AEParts.PATTERN_PROVIDER, 1);
+        
+        // ExtendedAE is optional, so its pattern providers are looked up by id
+        addUpgradeForOptionalItem("extendedae", "ex_pattern_provider");
+        addUpgradeForOptionalItem("extendedae", "ex_pattern_provider_part");
+        
+        // Fallback for pattern providers without any upgrade slots: the card can be installed into the mod's own
+        // (invisible) upgrade inventory, for example by sneak-clicking it onto the provider.
         Upgrades.add(RESULT_IMPORT_CARD.get(), RESULT_IMPORT_CARD, 1, "gui.ae2helpers.import_card");
         
+    }
+    
+    private static void addUpgradeForOptionalItem(String namespace, String path) {
+        var item = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(namespace, path));
+        if (item != Items.AIR) {
+            Upgrades.add(RESULT_IMPORT_CARD.get(), item, 1);
+        }
     }
     
     private void injectToAETab(BuildCreativeModeTabContentsEvent event) {

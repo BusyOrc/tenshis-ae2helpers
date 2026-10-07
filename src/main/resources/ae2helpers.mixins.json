@@ -4,9 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "crafter.CraftingHelperMixin",
-    "importcard.PatternProviderImportMixin",
-    "importcard.PatternProviderMenuMixin",
-    "importcard.ScreenStyleAccessor"
+    "importcard.PatternProviderImportMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -16,7 +14,6 @@
   },
   "client": [
     "crafter.AEBaseScreenAccessor",
-    "crafter.MEStorageScreenMixin",
-    "importcard.PatternProviderScreenMixin"
+    "crafter.MEStorageScreenMixin"
   ]
 }

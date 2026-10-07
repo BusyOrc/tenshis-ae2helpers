@@ -8,6 +8,7 @@ import appeng.api.stacks.AEKey;
 import appeng.api.stacks.GenericStack;
 import appeng.api.stacks.KeyCounter;
 import appeng.api.upgrades.IUpgradeInventory;
+import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.helpers.patternprovider.PatternProviderLogic;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
@@ -19,6 +20,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -245,15 +247,62 @@ public abstract class PatternProviderImportMixin implements IPatternProviderUpgr
     
     @Unique
     private ImportCardConfig ae2helpers$getConfig() {
-        if (!ae2helpers$hasImportCard()) return ImportCardConfig.DEFAULT;
-        var stack = ae2helpers$upgradeSlots.getStackInSlot(0);
-        return stack.getOrDefault(ae2helpers.IMPORT_CARD_CONFIG.get(), ImportCardConfig.DEFAULT);
+        var inventory = ae2helpers$getUsedUpgradeInventory();
+        
+        for (int i = 0; i < inventory.size(); i++) {
+            var stack = inventory.getStackInSlot(i);
+            if (stack.is(ae2helpers.RESULT_IMPORT_CARD.get())) {
+                return stack.getOrDefault(ae2helpers.IMPORT_CARD_CONFIG.get(), ImportCardConfig.DEFAULT);
+            }
+        }
+        
+        return ImportCardConfig.DEFAULT;
     }
     
     @Unique
     private boolean ae2helpers$hasImportCard() {
-        return !ae2helpers$upgradeSlots.getStackInSlot(0).isEmpty()
-                 && ae2helpers$upgradeSlots.getStackInSlot(0).is(ae2helpers.RESULT_IMPORT_CARD.get());
+        var inventory = ae2helpers$getUsedUpgradeInventory();
+        
+        for (int i = 0; i < inventory.size(); i++) {
+            if (inventory.getStackInSlot(i).is(ae2helpers.RESULT_IMPORT_CARD.get())) return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * The upgrade slots the pattern provider itself provides. Those are added by other mods (for example AppliedFlux),
+     * which inject an upgrade inventory into the pattern provider logic / host. Returns null if there is none.
+     */
+    @Unique
+    private @Nullable IUpgradeInventory ae2helpers$getNativeUpgradeInventory() {
+        var fromLogic = ae2helpers$asUpgradeInventory(this);
+        if (fromLogic != null) return fromLogic;
+        
+        var fromHost = ae2helpers$asUpgradeInventory(this.host);
+        if (fromHost != null) return fromHost;
+        
+        return ae2helpers$asUpgradeInventory(this.host.getBlockEntity());
+    }
+    
+    @Unique
+    private @Nullable IUpgradeInventory ae2helpers$asUpgradeInventory(@Nullable Object candidate) {
+        if (candidate instanceof IUpgradeableObject upgradeableObject) {
+            var inventory = upgradeableObject.getUpgrades();
+            if (inventory != null && inventory.size() > 0) return inventory;
+        }
+        
+        return null;
+    }
+    
+    /**
+     * The inventory the import card is read from. The pattern provider's own upgrade slots are preferred, the mod's
+     * own (invisible) inventory is only used as a fallback when the provider has none.
+     */
+    @Unique
+    private IUpgradeInventory ae2helpers$getUsedUpgradeInventory() {
+        var nativeInventory = ae2helpers$getNativeUpgradeInventory();
+        return nativeInventory != null ? nativeInventory : this.ae2helpers$upgradeSlots;
     }
     
     @Inject(method = "clearContent", at = @At("HEAD"))
@@ -302,6 +351,6 @@ public abstract class PatternProviderImportMixin implements IPatternProviderUpgr
     
     @Override
     public IUpgradeInventory ae2helpers$getUpgradeInventory() {
-        return ae2helpers$upgradeSlots;
+        return ae2helpers$getUsedUpgradeInventory();
     }
 }

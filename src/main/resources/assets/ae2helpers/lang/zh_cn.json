@@ -1,0 +1,32 @@
+{
+  "item.ae2helpers.result_import_card": "合成产物输入卡",
+
+  "ae2helpers.configuration.title": "天子的AE2小帮手配置",
+  "ae2helpers.configuration.section.ae2helpers.common.toml": "天子的AE2小帮手配置",
+  "ae2helpers.configuration.section.ae2helpers.common.toml.title": "天子的AE2小帮手配置",
+  "ae2helpers.configuration.items": "物品列表",
+  "ae2helpers.configuration.enableAutoImport": "开启合成网格自动输入",
+
+  "ae2helpers.crafthelper.title": "自动输入等待合成",
+  "ae2helpers.crafthelper.enabled": "启用",
+  "ae2helpers.crafthelper.disabled": "禁用",
+  "ae2helpers.crafthelper.tooltip": "[AE2Helpers]自动将ME网络合成的物品通过JEI移动到合成网格",
+
+  "ae2helpers.importcard.pattern": "ME样板供应器（仅单向供应模式，即需要先使用扳手右键调整样板供应器）",
+  "ae2helpers.importcard.screen.title": "输入卡配置",
+  "ae2helpers.importcard.resultsonly": "仅输入合成产物",
+  "ae2helpers.importcard.resultsonly.tooltip": "如果启用，只会输入当前合成样板对应的合成产物。\n如果禁用，输入目标机器的所有物品。",
+  "ae2helpers.importcard.sync": "与CPU同步",
+  "ae2helpers.importcard.sync.tooltip": "如果启用，持续检查CPU是否仍需求当前物品。\n如果任务被取消或被其他途径满足需求，则停止输入。\n只有启用了“仅输入合成产物”时才生效。",
+  "ae2helpers.importcard.direction": "输入侧",
+  "ae2helpers.importcard.direction.tooltip": "从相邻机器的这一个面输入物品。\n默认使用样板供应器所对应的面。",
+  "ae2helpers.importcard.direction.auto": "自动（朝向机器）",
+  "ae2helpers.importcard.tooltip.mode": "模式： ",
+  "ae2helpers.importcard.tooltip.crafting_results": "仅合成产物",
+  "ae2helpers.importcard.tooltip.everything": "所有",
+  "ae2helpers.importcard.tooltip.sync": "CPU同步： ",
+  "ae2helpers.importcard.tooltip.enabled": "启用",
+  "ae2helpers.importcard.tooltip.disabled": "禁用",
+  "ae2helpers.importcard.tooltip.side": "输入面: ",
+  "ae2helpers.importcard.tooltip.hint": "右键以配置"
+}

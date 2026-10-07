@@ -15,7 +15,7 @@ setups by removing the need for separate Import Buses (on blocks/machines that c
 This card allows the **Pattern Provider itself** to pull the finished items back from the adjacent machine, effectively 
 combining the "Push" and "Pull" logic into a single block.
 
-An upgrade slot has been added to the **Pattern Provider** where this card can be inserted.
+The card is inserted directly into the **Pattern Provider**'s own upgrade slot (the one added by mods such as AppliedFlux); this mod does not add a separate slot of its own.
 
 # Configuration
 Right-click the card item to open its settings menu:
