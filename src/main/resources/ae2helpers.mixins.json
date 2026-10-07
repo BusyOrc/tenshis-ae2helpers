@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "package": "rearth.ae2helpers.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "crafter.CraftingHelperMixin",
+    "importcard.PatternProviderImportMixin",
+    "importcard.PatternProviderMenuMixin",
+    "importcard.ScreenStyleAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  },
+  "client": [
+    "crafter.AEBaseScreenAccessor",
+    "crafter.MEStorageScreenMixin",
+    "importcard.PatternProviderScreenMixin"
+  ]
+}
